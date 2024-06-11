@@ -1,0 +1,11 @@
+.card h3.card-title {
+  background-color: #b0c4de;
+}
+.card .quantity {
+  width: 45px;
+  height: 35px;
+  border: 0.5px solid #6c757d;
+  border-radius: 5px;
+  background-color: white;
+  pointer-events: none;
+}

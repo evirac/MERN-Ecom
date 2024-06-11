@@ -1,0 +1,65 @@
+* {
+  font-family: "Century Gothic";
+}
+
+.navbar {
+  background-color: #b0c4de;
+}
+.navbar .container-fluid .navbar-nav .nav-item .active {
+  color: #4b5d63;
+  font-weight: bolder;
+}
+
+.nav-link .fa-cart-shopping {
+  color: #ebbabe;
+}
+.nav-link .fa-cart-shopping:hover {
+  color: #cf8288;
+}
+
+.btn {
+  background-color: #a1afb4;
+  color: black;
+  font-weight: lighter;
+}
+.btn:hover {
+  color: azure;
+  background-color: #789099;
+}
+
+.contrast {
+  background-color: #ebbabe;
+  color: #080808;
+}
+.contrast:hover {
+  background-color: #cf8288;
+}
+
+footer a {
+  text-decoration: none;
+  color: white;
+}
+
+.cover {
+  background-image: url("assets/background.jpg");
+  background-size: cover;
+  padding: 150px;
+}
+.cover h1 {
+  font-family: "Cascadia Code";
+  font-size: 5rem;
+  font-weight: lighter;
+  color: #3d3d45;
+}
+.cover h1 img {
+  height: 2em;
+}
+.cover .blockquote-footer {
+  color: #4b5d63;
+  font-size: large;
+  -webkit-text-stroke: 0.5px #4b5d63;
+}
+
+a{
+  text-decoration: none !important;
+}
