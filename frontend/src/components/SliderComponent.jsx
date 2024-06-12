@@ -1,7 +1,7 @@
 import Slider from "react-slick";
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../css/SliderComponent.css";
@@ -13,6 +13,7 @@ function SliderComponent() {
     const [showToast, setShowToast] = useState(false);
     const { addToCart } = useContext(CartContext);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,6 +25,11 @@ function SliderComponent() {
     }, []);
 
     const handleAddToCart = (product) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
         addToCart(product);
         setShowToast(true);
     };

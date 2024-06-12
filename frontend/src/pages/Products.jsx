@@ -2,17 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true); // Loading state
+    const [loading, setLoading] = useState(true); 
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubCategory, setSelectedSubCategory] = useState('');
     const { addToCart } = useContext(CartContext);
     const [showToast, setShowToast] = useState(false);
+    const navigate = useNavigate();
 
     const subCategories = {
         Men: ['Pant', 'Shirt', 'Hoodie'],
@@ -21,6 +22,11 @@ const Products = () => {
     };
 
     const handleAddToCart = (product) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
         addToCart(product);
         setShowToast(true);
     };
@@ -123,7 +129,7 @@ const Products = () => {
                                             <p className="card-text">Sub-Category: {product.SubCategory}</p>
                                         </div>
                                     </Link>
-                                    <button className="btn btn-secondary ms-2" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                                    <button className="btn btn-secondary m-2" onClick={() => handleAddToCart(product)}>Add to Cart</button>
                                 </div>
                             </div>
                         ))
