@@ -20,7 +20,7 @@ export default function Login() {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:5500/login', form);
+            const response = await axios.post('http://localhost:5500/users/login', form);
             localStorage.setItem('token', response.data.token);
             alert('Login successful');
             navigate('/profile');

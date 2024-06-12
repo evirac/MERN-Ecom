@@ -13,7 +13,7 @@ export default function Header() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post('http://localhost:5500/verifyToken', { token })
+            axios.post('http://localhost:5500/users/verifyToken', { token })
                 .then(response => setLoggedIn(true))
                 .catch(error => {
                     console.error('Error verifying token:', error);

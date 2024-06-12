@@ -12,6 +12,8 @@ import Cart from './pages/Cart'
 import CartProvider from './contexts/CartContext';
 import SearchResults from './components/SearchResults';
 import Profile from './pages/Profile'
+import UpdateEmail from './pages/UpdateEmail'
+import ResetPassword from './pages/ResetPassword'
 
 const router = createBrowserRouter([
   {
@@ -53,6 +55,14 @@ const router = createBrowserRouter([
   {
     path: '/profile',
     element: <Profile />
+  },
+  {
+    path: '/updateEmail',
+    element: <UpdateEmail />
+  },
+  {
+    path: '/resetPassword',
+    element: <ResetPassword />
   }
 ])
 
