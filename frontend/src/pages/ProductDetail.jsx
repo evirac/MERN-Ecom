@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -14,6 +14,7 @@ export default function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [showToast, setShowToast] = useState(false);
     const { addToCart } = useContext(CartContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProductDetails = async () => {
@@ -33,6 +34,11 @@ export default function ProductDetails() {
     }
 
     const handleAddToCart = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
         addToCart(product);
         setShowToast(true);
     };

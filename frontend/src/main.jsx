@@ -11,6 +11,7 @@ import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import CartProvider from './contexts/CartContext';
 import SearchResults from './components/SearchResults';
+import Profile from './pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
     path: '/search',
     element: <SearchResults />
   },
+  {
+    path: '/profile',
+    element: <Profile />
+  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
