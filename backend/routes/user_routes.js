@@ -62,7 +62,7 @@ router.post('/verifyToken', (req, res) => {
         console.log('Received token:', token); // Log the received token
 
         try {
-            const decoded = jwt.verify(token, 'secretKey');
+            const decoded = jwt.verify(token, 'secretKey',{ expiresIn: '1h' });
             console.log('Decoded Token:', decoded); // Log decoded token
             res.json({ valid: true });
         } catch (error) {
@@ -148,6 +148,46 @@ router.put('/resetPassword', async (req, res) => {
     } catch (error) {
         console.error('Error resetting password:', error);
         res.status(500).json({ error: 'Error resetting password' });
+    }
+});
+
+
+// cart synchronization
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, 'secretKey');
+        req.userId = decoded.userId;
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid token' });
+    }
+};
+
+// Get cart
+router.get('/cart', authMiddleware, async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId).populate('cart.productId');
+        res.json({ cart: user.cart });
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching cart' });
+    }
+});
+
+// Save cart
+router.post('/cart', authMiddleware, async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId);
+        user.cart = req.body.cart;
+        await user.save();
+        res.json({ message: 'Cart saved successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error saving cart' });
     }
 });
 

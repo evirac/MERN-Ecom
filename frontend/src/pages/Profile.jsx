@@ -3,10 +3,12 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { CartContext } from '../contexts/CartContext';
 
 const Profile = () => {
     const [user, setUser] = useState({});
     const navigate = useNavigate();
+    const { clearCart } = useContext(CartContext);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -19,6 +21,9 @@ const Profile = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        clearCart();
+        setLoggedIn(false);
+        setCart([])
         navigate('/login');
     };
     return (

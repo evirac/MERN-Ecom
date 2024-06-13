@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { CartContext } from "../contexts/CartContext";
+import { useContext } from "react";
 
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
     const navigate = useNavigate();
+    const { loadCart } = useContext(CartContext);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -22,7 +25,7 @@ export default function Login() {
         try {
             const response = await axios.post('http://localhost:5500/users/login', form);
             localStorage.setItem('token', response.data.token);
-            alert('Login successful');
+            loadCart();
             navigate('/profile');
         } catch (error) {
             console.error('Error logging in:', error);
