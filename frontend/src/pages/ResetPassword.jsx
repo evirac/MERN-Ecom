@@ -7,14 +7,27 @@ const ResetPassword = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
 
     const handleResetPassword = () => {
         const token = localStorage.getItem('token');
         axios.put('http://localhost:5500/users/resetPassword', { currentPassword, newPassword }, {
             headers: { Authorization: `Bearer ${token}` }
         })
-        .then(response => setMessage(response.data.message))
-        .catch(err => console.error('Error resetting password:', err));
+        .then(response => {
+            setMessage(response.data.message);
+            setError('');
+        })
+        .catch(err => {
+            console.error('Error resetting password:', err);
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+                setMessage('');
+            } else {
+                setError('An error occurred. Please try again.');
+                setMessage('');
+            }
+        });
     };
 
     return (
@@ -47,6 +60,7 @@ const ResetPassword = () => {
                                     </button>
                                 </div>
                                 {message && <div className="alert alert-info mt-3">{message}</div>}
+                                {error && <div className="alert alert-danger mt-3">{error}</div>}
                             </div>
                         </div>
                     </div>

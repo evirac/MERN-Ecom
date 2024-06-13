@@ -56,13 +56,22 @@ router.post('/login', async (req, res) => {
 
 // Verify token endpoint
 router.post('/verifyToken', (req, res) => {
-    const { token } = req.body;
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+        const token = authHeader.split(' ')[1]; // Extract the token
+        console.log('Received token:', token); // Log the received token
 
-    try {
-        jwt.verify(token, 'secretKey');
-        res.json({ valid: true });
-    } catch (error) {
-        res.status(401).json({ valid: false });
+        try {
+            const decoded = jwt.verify(token, 'secretKey');
+            console.log('Decoded Token:', decoded); // Log decoded token
+            res.json({ valid: true });
+        } catch (error) {
+            console.error('Token verification error:', error.message); // Log error details
+            res.status(401).json({ valid: false, message: 'Invalid token' });
+        }
+    } else {
+        console.log('Authorization header missing');
+        res.status(401).json({ valid: false, message: 'Authorization header missing' });
     }
 });
 
