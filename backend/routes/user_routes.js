@@ -5,6 +5,9 @@ const UserModel = require('../models/user_model');
 
 const router = express.Router();
 
+// Secret key for JWT
+const SECRET_KEY = 'secretKey';
+
 // Register endpoint
 router.post('/register', async (req, res) => {
     const { fullName, email, password } = req.body;
@@ -16,12 +19,7 @@ router.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = new UserModel({
-            fullName,
-            email,
-            password: hashedPassword
-        });
+        const newUser = new UserModel({ fullName, email, password: hashedPassword });
 
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
@@ -46,7 +44,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ userId: user._id }, 'secretKey', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, SECRET_KEY);
         res.json({ token });
     } catch (error) {
         console.error('Error logging in:', error);
@@ -54,29 +52,8 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Verify token endpoint
-router.post('/verifyToken', (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (authHeader) {
-        const token = authHeader.split(' ')[1]; // Extract the token
-        console.log('Received token:', token); // Log the received token
-
-        try {
-            const decoded = jwt.verify(token, 'secretKey',{ expiresIn: '1h' });
-            console.log('Decoded Token:', decoded); // Log decoded token
-            res.json({ valid: true });
-        } catch (error) {
-            console.error('Token verification error:', error.message); // Log error details
-            res.status(401).json({ valid: false, message: 'Invalid token' });
-        }
-    } else {
-        console.log('Authorization header missing');
-        res.status(401).json({ valid: false, message: 'Authorization header missing' });
-    }
-});
-
-// Profile endpoint
-router.get('/profile', async (req, res) => {
+// Middleware for authenticating token
+const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         return res.status(401).json({ message: 'No token provided' });
@@ -84,8 +61,24 @@ router.get('/profile', async (req, res) => {
 
     const token = authHeader.split(' ')[1];
     try {
-        const decoded = jwt.verify(token, 'secretKey');
-        const user = await UserModel.findById(decoded.userId).select('-password');
+        const decoded = jwt.verify(token, SECRET_KEY);
+        req.userId = decoded.userId;
+        next();
+    } catch (error) {
+        console.error('Token verification error:', error.message); // Log error details
+        res.status(401).json({ message: 'Invalid token' });
+    }
+};
+
+// Verify token endpoint
+router.post('/verifyToken', authMiddleware, (req, res) => {
+    res.json({ valid: true });
+});
+
+// Profile endpoint
+router.get('/profile', authMiddleware, async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId).select('-password');
         res.json(user);
     } catch (error) {
         console.error('Error fetching profile:', error);
@@ -94,18 +87,11 @@ router.get('/profile', async (req, res) => {
 });
 
 // Update email endpoint
-router.put('/updateEmail', async (req, res) => {
+router.put('/updateEmail', authMiddleware, async (req, res) => {
     const { newEmail } = req.body;
-    const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    const token = authHeader.split(' ')[1];
     try {
-        const decoded = jwt.verify(token, 'secretKey');
-        const user = await UserModel.findById(decoded.userId);
+        const user = await UserModel.findById(req.userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -120,18 +106,11 @@ router.put('/updateEmail', async (req, res) => {
 });
 
 // Reset password endpoint
-router.put('/resetPassword', async (req, res) => {
+router.put('/resetPassword', authMiddleware, async (req, res) => {
     const { currentPassword, newPassword } = req.body;
-    const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    const token = authHeader.split(' ')[1];
     try {
-        const decoded = jwt.verify(token, 'secretKey');
-        const user = await UserModel.findById(decoded.userId);
+        const user = await UserModel.findById(req.userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -150,24 +129,6 @@ router.put('/resetPassword', async (req, res) => {
         res.status(500).json({ error: 'Error resetting password' });
     }
 });
-
-
-// cart synchronization
-const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    try {
-        const decoded = jwt.verify(token, 'secretKey');
-        req.userId = decoded.userId;
-        next();
-    } catch (error) {
-        res.status(401).json({ message: 'Invalid token' });
-    }
-};
 
 // Get cart
 router.get('/cart', authMiddleware, async (req, res) => {
