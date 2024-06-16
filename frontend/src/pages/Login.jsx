@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { CartContext } from "../contexts/CartContext";
-import { useContext } from "react";
 
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -24,8 +23,10 @@ export default function Login() {
 
         try {
             const response = await axios.post('http://localhost:5500/users/login', form);
-            localStorage.setItem('token', response.data.token);
-            loadCart();
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+
+            loadCart(token);
             navigate('/profile');
         } catch (error) {
             console.error('Error logging in:', error);

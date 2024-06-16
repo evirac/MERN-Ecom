@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -15,17 +15,16 @@ const Profile = () => {
         axios.get('http://localhost:5500/users/profile', {
             headers: { Authorization: `Bearer ${token}` }
         })
-            .then(response => setUser(response.data))
-            .catch(err => console.error('Error fetching profile:', err));
+        .then(response => setUser(response.data))
+        .catch(err => console.error('Error fetching profile:', err));
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         clearCart();
-        setLoggedIn(false);
-        setCart([])
         navigate('/login');
     };
+
     return (
         <>
             <Header />

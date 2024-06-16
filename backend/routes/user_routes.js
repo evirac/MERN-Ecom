@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user_model');
-
+const ProductModel = require('../models/product_model')
 const router = express.Router();
 
 // Secret key for JWT
@@ -18,8 +18,8 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new UserModel({ fullName, email, password: hashedPassword });
+        // const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new UserModel({ fullName, email, password: password });
 
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
@@ -36,6 +36,7 @@ router.post('/login', async (req, res) => {
     try {
         const user = await UserModel.findOne({ email });
         if (!user) {
+            console.log("email id not found")
             return res.status(400).json({ message: 'Invalid email or password' });
         }
 
@@ -129,6 +130,118 @@ router.put('/resetPassword', authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Error resetting password' });
     }
 });
+
+
+// add to cart
+router.post('/cart/add', authMiddleware, async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const userId = req.userId;
+
+        // Find the product
+        const product = await ProductModel.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Find the user
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the product is already in the cart
+        const cartItemIndex = user.cart.findIndex(item => item.productId.equals(productId));
+        if (cartItemIndex > -1) {
+            // If the product is already in the cart, increase the quantity
+            user.cart[cartItemIndex].quantity += 1;
+        } else {
+            // If the product is not in the cart, add it
+            user.cart.push({ productId, quantity: 1 });
+        }
+
+        // Save the user
+        await user.save();
+
+        res.send({ cart: user.cart });
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        res.status(500).send({ message: 'Server Error', error });
+    }
+});
+
+// Update cart item quantity
+router.post('/cart/update', authMiddleware, async (req, res) => {
+    try {
+        const { productId, quantity } = req.body;
+        const userId = req.userId;
+
+        // Find the user
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Update quantity
+        const cartItem = user.cart.find(item => item.productId.equals(productId));
+        if (cartItem) {
+            cartItem.quantity = quantity;
+            await user.save();
+            res.send({ cart: user.cart });
+        } else {
+            res.status(404).json({ message: 'Cart item not found' });
+        }
+    } catch (error) {
+        console.error('Error updating cart:', error);
+        res.status(500).send({ message: 'Server Error', error });
+    }
+});
+
+// Remove from cart
+router.post('/cart/remove', authMiddleware, async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const userId = req.userId;
+
+        // Find the user
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Remove the item from the cart
+        user.cart = user.cart.filter(item => !item.productId.equals(productId));
+        await user.save();
+        
+        res.send({ cart: user.cart });
+    } catch (error) {
+        console.error('Error removing from cart:', error);
+        res.status(500).send({ message: 'Server Error', error });
+    }
+});
+
+// Clear cart
+router.post('/cart/clear', authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        // Find the user
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Clear the cart
+        user.cart = [];
+        await user.save();
+
+        res.send({ cart: user.cart });
+    } catch (error) {
+        console.error('Error clearing cart:', error);
+        res.status(500).send({ message: 'Server Error', error });
+    }
+});
+
 
 // Get cart
 router.get('/cart', authMiddleware, async (req, res) => {
