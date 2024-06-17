@@ -70,7 +70,7 @@ const AddProduct = () => {
         formData.append('Image', form.image);
 
         try {
-            const response = await axios.post('http://localhost:5500/addProduct', formData, {
+            const response = await axios.post('http://localhost:5500/products', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             console.log('Product added:', response.data);

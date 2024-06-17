@@ -14,11 +14,13 @@ import SearchResults from './components/SearchResults';
 import Profile from './pages/Profile'
 import UpdateEmail from './pages/UpdateEmail'
 import ResetPassword from './pages/ResetPassword'
+import Error from './pages/Error'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />
+    element: <Home />,
+    errorElement: <Error />
   },
   {
     path: '/products',
@@ -68,7 +70,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CartProvider> {/* Wrap the application with CartProvider */}
+    <CartProvider> {/* Wrap the application with CartProvider to manage cart*/}
       <RouterProvider router={router} />
     </CartProvider>
   </React.StrictMode>

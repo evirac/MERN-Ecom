@@ -19,7 +19,7 @@ mongoose.connection.on('error', (error) => {
     console.log("Some error while connecting to DB", error);
 });
 
-app.use('/getProducts', productRoutes);
+app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 
 app.listen(5500, () => {

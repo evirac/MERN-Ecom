@@ -40,7 +40,7 @@ const Products = () => {
         setSelectedCategory(category);
         setSelectedSubCategory(subCategory);
 
-        axios.get('http://localhost:5500/getProducts')
+        axios.get('http://localhost:5500/products')
             .then(response => {
                 setProducts(response.data);
                 setLoading(false); // Data fetched, set loading to false

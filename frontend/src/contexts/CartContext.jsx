@@ -62,7 +62,6 @@ export const CartProvider = ({ children }) => {
         })
         .then(async response => {
             setCart(response.data.cart);
-            console.log('Updated Cart:', response.data.cart);  // Debugging
             await loadCart(token)
         })
         .catch(err => {

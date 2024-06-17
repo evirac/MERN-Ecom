@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { CartContext } from '../contexts/CartContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Toast from '../components/Toast';
+
 
 export default function Cart() {
     const { cart, updateQuantity, removeFromCart } = useContext(CartContext);

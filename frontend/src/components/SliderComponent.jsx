@@ -17,7 +17,7 @@ function SliderComponent() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios('http://localhost:5500/getProducts');
+            const result = await axios('http://localhost:5500/products');
             setProducts(result.data);
             setLoading(false);
         };
