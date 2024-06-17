@@ -220,28 +220,6 @@ router.post('/cart/remove', authMiddleware, async (req, res) => {
     }
 });
 
-// Clear cart
-router.post('/cart/clear', authMiddleware, async (req, res) => {
-    try {
-        const userId = req.userId;
-
-        // Find the user
-        const user = await UserModel.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Clear the cart
-        user.cart = [];
-        await user.save();
-
-        res.send({ cart: user.cart });
-    } catch (error) {
-        console.error('Error clearing cart:', error);
-        res.status(500).send({ message: 'Server Error', error });
-    }
-});
-
 
 // Get cart
 router.get('/cart', authMiddleware, async (req, res) => {

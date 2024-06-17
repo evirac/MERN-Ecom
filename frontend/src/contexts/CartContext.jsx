@@ -90,21 +90,7 @@ export const CartProvider = ({ children }) => {
     };
 
     const clearCart = () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('No token found. Please log in.');
-            return;
-        }
-
-        axios.post('http://localhost:5500/users/cart/clear', {}, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(response => {
-            setCart([]);
-        })
-        .catch(err => {
-            console.error('Error clearing cart:', err);
-        });
+        setCart([])
     };
 
     return (

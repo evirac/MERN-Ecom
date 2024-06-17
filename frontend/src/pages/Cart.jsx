@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CartContext } from '../contexts/CartContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Toast from '../components/Toast';
 
 
 export default function Cart() {
-    const { cart, updateQuantity, removeFromCart } = useContext(CartContext);
+    const { cart, updateQuantity, removeFromCart, loading, error } = useContext(CartContext);
 
     const calculateTotal = () => {
         const total = cart.reduce((acc, item) => acc + item.productId.Price * item.quantity, 0);
@@ -22,7 +21,10 @@ export default function Cart() {
         const imageBase64 = btoa(binaryString);
         return `data:image/jpeg;base64,${imageBase64}`;
     };
-    
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
     const { total, tax, grandTotal } = calculateTotal();
     return (
         <>
