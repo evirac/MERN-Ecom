@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
-const Address = require('../models/Address');
+const Address = require('../models/address_model');
 
 // Add new address
-router.post('/address', authMiddleware, async (req, res) => {
+router.post('/post', authMiddleware, async (req, res) => {
     try {
         const { fullName, address, city, postalCode, country } = req.body;
         const userId = req.userId;
@@ -27,7 +27,7 @@ router.post('/address', authMiddleware, async (req, res) => {
 });
 
 // Get addresses for user
-router.get('/addresses', authMiddleware, async (req, res) => {
+router.get('/get', authMiddleware, async (req, res) => {
     try {
         const userId = req.userId;
         const addresses = await Address.find({ userId });

@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { OrderContext } from '../contexts/OrderContext';
-import { CartContext } from '../contexts/CartContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-const Shipping = () => {
+const ShippingScreen = () => {
     const { addShippingAddress } = useContext(OrderContext);
-    const { cart } = useContext(CartContext);
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [newAddress, setNewAddress] = useState({
@@ -20,11 +20,11 @@ const Shipping = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get('http://localhost:5500/addresses', {
+        axios.get('http://localhost:5500/addresses/get', {
             headers: { Authorization: `Bearer ${token}` }
         })
-        .then(response => setAddresses(response.data))
-        .catch(err => console.error('Error fetching addresses:', err));
+            .then(response => setAddresses(response.data))
+            .catch(err => console.error('Error fetching addresses:', err));
     }, []);
 
     const handleAddressChange = (e) => {
@@ -33,7 +33,7 @@ const Shipping = () => {
 
     const handleAddAddress = async () => {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:5500/address', newAddress, {
+        const response = await axios.post('http://localhost:5500/addresses/post', newAddress, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setAddresses([...addresses, response.data.address]);
@@ -52,34 +52,45 @@ const Shipping = () => {
     };
 
     return (
-        <div>
-            <h2>Shipping Address</h2>
-            {addresses.length > 0 && (
-                <div>
-                    <h3>Select Address</h3>
-                    {addresses.map(address => (
-                        <div key={address._id}>
-                            <input
-                                type="radio"
-                                name="address"
-                                value={address._id}
-                                onChange={() => handleSelectAddress(address)}
-                            />
-                            {address.fullName}, {address.address}, {address.city}, {address.postalCode}, {address.country}
-                        </div>
-                    ))}
+        <Fragment>
+            <Header />
+            <div >
+                <h1 className='ms-2 text-center'>Shipping Address</h1>
+                {addresses.length > 0 && (
+                    <div className='mx-3'>
+                        <h3 className=''>Select Address</h3>
+                        {addresses.map(address => (
+                            <div key={address._id}>
+                                <input
+                                    type="radio"
+                                    name="address"
+                                    className="form-check-input radio mx-3"
+                                    value={address._id}
+                                    onChange={() => handleSelectAddress(address)}
+                                />
+                                {address.fullName}, {address.address}, {address.city}, {address.postalCode}, {address.country}
+                            </div>
+                        ))}
+                    </div>
+                )}
+                <hr className='shadow'/>
+                <form className='form' action="">
+                <h3 className='mt-3 ms-2 '>Or Add New Address</h3>
+                    <div className='mb-2 container '>
+                        <input className='form-control mb-2' type="text" name="address" placeholder="Address" value={newAddress.address} onChange={handleAddressChange} />
+                        <input className='form-control mb-2' type="text" name="city" placeholder="City" value={newAddress.city} onChange={handleAddressChange} />
+                        <input className='form-control mb-2' type="text" name="postalCode" placeholder="Postal Code" value={newAddress.postalCode} onChange={handleAddressChange} />
+                        <input className='form-control mb-2' type="text" name="fullName" placeholder="Full Name" value={newAddress.fullName} onChange={handleAddressChange} />
+                        <input className='form-control mb-2' type="text" name="country" placeholder="Country" value={newAddress.country} onChange={handleAddressChange} />
+                        <hr />
+                        <button className='btn mx-2' onClick={handleAddAddress}>Add Address</button>
+                        <button className='btn mx-2' onClick={handleNext}>Choose Payment Option</button>
+                    </div>
+                </form>
                 </div>
-            )}
-            <h3>Or Add New Address</h3>
-            <input type="text" name="fullName" placeholder="Full Name" value={newAddress.fullName} onChange={handleAddressChange} />
-            <input type="text" name="address" placeholder="Address" value={newAddress.address} onChange={handleAddressChange} />
-            <input type="text" name="city" placeholder="City" value={newAddress.city} onChange={handleAddressChange} />
-            <input type="text" name="postalCode" placeholder="Postal Code" value={newAddress.postalCode} onChange={handleAddressChange} />
-            <input type="text" name="country" placeholder="Country" value={newAddress.country} onChange={handleAddressChange} />
-            <button onClick={handleAddAddress}>Add Address</button>
-            <button onClick={handleNext}>Choose Payment Option</button>
-        </div>
+            <Footer />
+        </Fragment>
     );
 };
 
-export default Shipping;
+export default ShippingScreen;

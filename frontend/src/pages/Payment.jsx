@@ -1,6 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Fragment } from 'react';
 import { OrderContext } from '../contexts/OrderContext';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const Payment = () => {
     const { addPaymentMethod } = useContext(OrderContext);
@@ -19,12 +21,18 @@ const Payment = () => {
     };
 
     return (
-        <div>
-            <h2>Payment Method</h2>
-            <input type="radio" name="paymentMethod" value="PayPal" onChange={handlePaymentChange} /> PayPal
-            <input type="radio" name="paymentMethod" value="Cash on Delivery" onChange={handlePaymentChange} /> Cash on Delivery
-            <button onClick={handleNext}>Order Summary</button>
-        </div>
+        <Fragment>
+            <Header/>
+            <div>
+                <h2>Payment Method</h2>
+                <input type="radio" className='check-input mb-4 ms-4' name="paymentMethod" value="PayPal " onChange={handlePaymentChange} /> PayPal
+                <br />
+                <input type="radio" className='check-input mb-4 ms-4' name="paymentMethod" value="Cash on Delivery" onChange={handlePaymentChange} /> Cash on Delivery
+                <br />
+                <button className='btn mb-5 ms-4' onClick={handleNext}>Order Summary</button>
+            </div>
+            <Footer />
+        </Fragment>
     );
 };
 

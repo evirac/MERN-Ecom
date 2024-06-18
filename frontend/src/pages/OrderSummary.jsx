@@ -1,5 +1,7 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { OrderContext } from '../contexts/OrderContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 
 const OrderSummary = () => {
@@ -16,22 +18,34 @@ const OrderSummary = () => {
     };
 
     return (
-        <div>
-            <h2>Order Summary</h2>
-            <h3>Cart Items</h3>
-            {order.cart.map(item => (
-                <div key={item.productId}>
-                    {item.quantity} x {item.productId}
-                </div>
-            ))}
-            <h3>Shipping Address</h3>
+        <Fragment>
+            <Header />
             <div>
-                {order.shippingAddress.fullName}, {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.postalCode}, {order.shippingAddress.country}
+                <h2>Order Summary</h2>
+                <h3>Cart Items</h3>
+                {order.cart.length > 0 ? (
+                    order.cart.map(item => (
+                        <div key={item.productId._id}>
+                            {item.quantity} x {item.productId.Name} - ${item.productId.Price * item.quantity}
+                        </div>
+                    ))
+                ) : (
+                    <div>No items in the cart.</div>
+                )}
+                <h3>Shipping Address</h3>
+                {order.shippingAddress ? (
+                    <div>
+                        {order.shippingAddress.fullName}, {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.postalCode}, {order.shippingAddress.country}
+                    </div>
+                ) : (
+                    <div>No shipping address provided.</div>
+                )}
+                <h3>Payment Method</h3>
+                <div>{order.paymentMethod || 'No payment method selected.'}</div>
+                <button onClick={handlePlaceOrder}>Place Order</button>
             </div>
-            <h3>Payment Method</h3>
-            <div>{order.paymentMethod}</div>
-            <button onClick={handlePlaceOrder}>Place Order</button>
-        </div>
+            <Footer />
+        </Fragment>
     );
 };
 

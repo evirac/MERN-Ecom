@@ -2,15 +2,21 @@ import React, { useContext, useEffect } from 'react';
 import { CartContext } from '../contexts/CartContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Cart() {
     const { cart, updateQuantity, removeFromCart, loading, error } = useContext(CartContext);
+    const navigate = useNavigate();
 
     const calculateTotal = () => {
         const total = cart.reduce((acc, item) => acc + item.productId.Price * item.quantity, 0);
         const tax = total * 0.1;
         return { total, tax, grandTotal: total + tax };
+    };
+
+    const handleProceedToPayment = () => {
+        navigate('/shipping');
     };
 
     // Helper function to convert image buffer to base64 string
@@ -84,7 +90,7 @@ export default function Cart() {
                                 <p className="card-text">Subtotal: ${total.toFixed(2)}</p>
                                 <p className="card-text">Tax (10%): ${tax.toFixed(2)}</p>
                                 <h5 className="card-text">Total: ${grandTotal.toFixed(2)}</h5>
-                                <button className="btn btn-primary mt-3">Proceed to Payment</button>
+                                <button className="btn btn-primary mt-3" onClick={handleProceedToPayment}>Proceed to Payment</button>
                             </div>
                         </div>
                     </div>

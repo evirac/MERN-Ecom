@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
-const Order = require('../models/Order');
+const Order = require('../models/order_model');
 
 // Place order
-router.post('/order', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     try {
         const { cart, shippingAddress, paymentMethod, totalPrice } = req.body;
         const userId = req.userId;

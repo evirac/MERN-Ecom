@@ -18,6 +18,7 @@ import Error from './pages/Error'
 import Shipping from './pages/Shipping'
 import Payment from './pages/Payment'
 import OrderSummary from './pages/OrderSummary'
+import { OrderProvider } from './contexts/OrderContext'
 
 const router = createBrowserRouter([
   {
@@ -85,8 +86,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CartProvider> {/* Wrap the application with CartProvider to manage cart*/}
-      <RouterProvider router={router} />
-    </CartProvider>
+      <CartProvider>
+    <OrderProvider>
+        <RouterProvider router={router} />
+    </OrderProvider>
+      </CartProvider>
   </React.StrictMode>
 );
