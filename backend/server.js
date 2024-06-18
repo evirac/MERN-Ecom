@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const { MONGODB_URI } = require('./config');
 const productRoutes = require('./routes/product_routes');
 const userRoutes = require('./routes/user_routes')
+const orderRoutes = require('./routes/order_routes')
+const addressRoutes = require('./routes/order_routes')
 
 const app = express();
 app.use(cors());

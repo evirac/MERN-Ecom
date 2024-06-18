@@ -15,6 +15,9 @@ import Profile from './pages/Profile'
 import UpdateEmail from './pages/UpdateEmail'
 import ResetPassword from './pages/ResetPassword'
 import Error from './pages/Error'
+import Shipping from './pages/Shipping'
+import Payment from './pages/Payment'
+import OrderSummary from './pages/OrderSummary'
 
 const router = createBrowserRouter([
   {
@@ -65,6 +68,18 @@ const router = createBrowserRouter([
   {
     path: '/resetPassword',
     element: <ResetPassword />
+  },
+  {
+    path: '/shipping',
+    element: <Shipping />
+  },
+  {
+    path: '/payment',
+    element: <Payment />
+  },
+  {
+    path: '/order-summary',
+    element: <OrderSummary />
   }
 ])
 
