@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const { MONGODB_URI } = require('./config');
 const productRoutes = require('./routes/product_routes');
 const userRoutes = require('./routes/user_routes')
+const orderRoutes = require('./routes/order_routes')
+const addressRoutes = require('./routes/address_route')
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,8 @@ mongoose.connection.on('error', (error) => {
 
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
+app.use('/orders', orderRoutes)
+app.use('/addresses', addressRoutes)
 
 app.listen(5500, () => {
     console.log("server is running on port 5500");
