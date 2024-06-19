@@ -5,8 +5,8 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
-    const [loading, setLoading] = useState(true); 
-    const [error, setError] = useState(null); 
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -42,12 +42,13 @@ export const CartProvider = ({ children }) => {
         axios.post('http://localhost:5500/users/cart/add', { productId: product._id }, {
             headers: { Authorization: `Bearer ${token}` }
         })
-        .then(response => {
-            setCart(response.data.cart);
-        })
-        .catch(err => {
-            console.error('Error adding to cart:', err);
-        });
+            .then(async response => {
+                setCart(response.data.cart);
+                await loadCart(token)
+            })
+            .catch(err => {
+                console.error('Error adding to cart:', err);
+            });
     };
 
     const updateQuantity = (productId, quantity) => {
@@ -60,13 +61,13 @@ export const CartProvider = ({ children }) => {
         axios.post('http://localhost:5500/users/cart/update', { productId, quantity }, {
             headers: { Authorization: `Bearer ${token}` }
         })
-        .then(async response => {
-            setCart(response.data.cart);
-            await loadCart(token)
-        })
-        .catch(err => {
-            console.error('Error updating cart quantity:', err);
-        });
+            .then(async response => {
+                setCart(response.data.cart);
+                await loadCart(token)
+            })
+            .catch(err => {
+                console.error('Error updating cart quantity:', err);
+            });
     };
 
     const removeFromCart = (productId) => {
@@ -79,18 +80,32 @@ export const CartProvider = ({ children }) => {
         axios.post('http://localhost:5500/users/cart/remove', { productId }, {
             headers: { Authorization: `Bearer ${token}` }
         })
-        .then(async response => {
-            setCart(response.data.cart);
-            console.log('Remove from Cart:', response.data.cart);  // Debugging
-            await loadCart(token)
-        })
-        .catch(err => {
-            console.error('Error removing from cart:', err);
-        });
+            .then(async response => {
+                setCart(response.data.cart);
+                console.log('Remove from Cart:', response.data.cart);  // Debugging
+                await loadCart(token)
+            })
+            .catch(err => {
+                console.error('Error removing from cart:', err);
+            });
     };
 
-    const clearCart = () => {
-        setCart([])
+
+    const clearCart = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found. Please log in.');
+            return;
+        }
+
+        try {
+            await axios.post('http://localhost:5500/users/cart', { cart: [] }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setCart([]);
+        } catch (err) {
+            console.error('Error clearing cart:', err);
+        }
     };
 
     return (

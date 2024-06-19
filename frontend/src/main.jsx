@@ -19,6 +19,7 @@ import Shipping from './pages/Shipping'
 import Payment from './pages/Payment'
 import OrderSummary from './pages/OrderSummary'
 import { OrderProvider } from './contexts/OrderContext'
+import OrderDetails from './pages/OrderDetails'
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
   {
     path: '/order-summary',
     element: <OrderSummary />
+  },
+  {
+    path: "/order/:orderId",
+    element: <OrderDetails />
   }
 ])
 

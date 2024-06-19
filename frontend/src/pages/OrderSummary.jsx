@@ -20,12 +20,12 @@ const OrderSummary = () => {
     return (
         <Fragment>
             <Header />
-            <div>
+            <div className='container mb-5'>
                 <h2>Order Summary</h2>
                 <h3>Cart Items</h3>
                 {order.cart.length > 0 ? (
                     order.cart.map(item => (
-                        <div key={item.productId._id}>
+                        <div className='my-2' key={item.productId._id}>
                             {item.quantity} x {item.productId.Name} - ${item.productId.Price * item.quantity}
                         </div>
                     ))
@@ -42,7 +42,7 @@ const OrderSummary = () => {
                 )}
                 <h3>Payment Method</h3>
                 <div>{order.paymentMethod || 'No payment method selected.'}</div>
-                <button onClick={handlePlaceOrder}>Place Order</button>
+                <button className='btn' onClick={handlePlaceOrder}>Place Order</button>
             </div>
             <Footer />
         </Fragment>

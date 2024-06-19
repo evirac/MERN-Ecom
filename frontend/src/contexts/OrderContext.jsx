@@ -38,21 +38,21 @@ export const OrderProvider = ({ children }) => {
     const placeOrder = async () => {
         try {
             const token = localStorage.getItem('token');
-            
+
             // Extract only necessary information from cart items
             const cartItems = cart.map(item => ({
                 productId: item.productId._id,
                 quantity: item.quantity,
                 price: item.productId.Price
             }));
-            
-            const orderData = { 
+
+            const orderData = {
                 cart: cartItems,
                 shippingAddress: order.shippingAddress,
                 paymentMethod: order.paymentMethod,
                 totalPrice: order.totalPrice,
             };
-            
+
             const response = await axios.post('http://localhost:5500/orders', orderData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
