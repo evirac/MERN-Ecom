@@ -3,23 +3,32 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Container, Card, Row, Col, Spinner} from 'react-bootstrap';
 const OrderDetails = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState(null);
 
+
     useEffect(() => {
-        console.log("order: ",order)
+        console.log("order: ", order)
         const token = localStorage.getItem('token');
         axios.get(`http://localhost:5500/orders/${orderId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
-            .then(response => setOrder(response.data))
+            .then(response => {
+                setOrder(response.data)
+            })
             .catch(err => console.error('Error fetching order details:', err));
     }, [orderId]);
 
     if (!order) {
-        return <div>Loading...</div>;
+        return (
+            <Container  className='mt-5 text-center'>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+            </Container>
+        );
     }
 
     // Helper function to convert image buffer to base64 string

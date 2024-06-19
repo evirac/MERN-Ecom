@@ -8,7 +8,7 @@ import Toast from "../components/Toast";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubCategory, setSelectedSubCategory] = useState('');
     const { addToCart } = useContext(CartContext);
@@ -108,9 +108,9 @@ const Products = () => {
                 <div className="row">
                     {loading ? (
                         <div className="text-center my-5">
-                            <div className="spinner-border" role="status">
+                            <Spinner animation="border" role="status">
                                 <span className="visually-hidden">Loading...</span>
-                            </div>
+                            </Spinner>
                         </div>
                     ) : (
                         filteredProducts.map(product => (

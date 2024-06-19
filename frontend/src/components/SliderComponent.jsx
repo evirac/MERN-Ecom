@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 import "../css/SliderComponent.css";
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
+import { Spinner } from "react-bootstrap";
+
 
 function SliderComponent() {
     const [products, setProducts] = useState([]);
@@ -74,9 +76,9 @@ function SliderComponent() {
             <div className="container mx-auto p-4">
                 {loading ? (
                     <div className="text-center my-5">
-                        <div className="spinner-border" role="status">
+                        <Spinner animation="border" role="status">
                             <span className="visually-hidden">Loading...</span>
-                        </div>
+                        </Spinner>
                     </div>
                 ) : (
                     <Slider {...settings}>
