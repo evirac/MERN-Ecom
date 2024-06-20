@@ -16,7 +16,7 @@ const SearchResults = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:5500/getProducts')
+        axios.get('http://localhost:5500/products')
             .then(response => {
                 setProducts(response.data);
                 setLoading(false);

@@ -22,6 +22,8 @@ import { OrderProvider } from './contexts/OrderContext'
 import OrderDetails from './pages/OrderDetails'
 import Admin from './pages/Admin'
 import AdminUserActions from './pages/AdminUserAction'
+import RemoveProduct from './pages/RemoveProduct'
+import UpdateProduct from './pages/UpdateProduct'
 
 
 const router = createBrowserRouter([
@@ -97,6 +99,13 @@ const router = createBrowserRouter([
   {
     path: "/admin/user/:userId",
     element: <AdminUserActions />
+  },{
+    path: '/removeproduct',
+    element: <RemoveProduct />
+  },
+  {
+    path: '/updateproduct',
+    element: <UpdateProduct/>
   }
 ])
 

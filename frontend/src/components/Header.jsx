@@ -9,6 +9,8 @@ export default function Header() {
     const { cart, clearCart } = useContext(CartContext);
     const [loggedIn, setLoggedIn] = useState(false);
     const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -18,11 +20,11 @@ export default function Header() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            .then(response => setLoggedIn(true))
-            .catch(error => {
-                console.error('Error verifying token:', error.response ? error.response.data : error.message);
-                setLoggedIn(false);
-            });
+                .then(response => setLoggedIn(true))
+                .catch(error => {
+                    console.error('Error verifying token:', error.response ? error.response.data : error.message);
+                    setLoggedIn(false);
+                });
         }
     }, []);
 
@@ -32,7 +34,19 @@ export default function Header() {
         setLoggedIn(false);
         navigate('/login');
     };
-    
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        if (searchQuery.trim() !== '') {
+            navigate(`/search?query=${searchQuery}`);
+        }
+    };
+
     return (
         <>
             <nav className="navbar navbar-expand-lg">
@@ -55,15 +69,19 @@ export default function Header() {
                     <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
                         <br />
                         <div className="col">
-                            <div className="input-group mb-2">
-                                <input
-                                    className="form-control"
-                                    type="search"
-                                    placeholder="Search"
-                                    aria-label="Search"
-                                />
-                                <button className="btn contrast" type="submit">Search</button>
-                            </div>
+                            <form className="d-flex col" onSubmit={handleSearchSubmit}>
+                                <div className="input-group mb-2">
+                                    <input
+                                        className="form-control"
+                                        type="search"
+                                        placeholder="Search"
+                                        aria-label="Search"
+                                        value={searchQuery}
+                                        onChange={handleSearchChange}
+                                    />
+                                    <button className="btn contrast" type="submit">Search</button>
+                                </div>
+                            </form>
                         </div>
                         <ul className="navbar-nav me-auto mb-lg-0">
                             {loggedIn ? (

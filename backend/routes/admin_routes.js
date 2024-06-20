@@ -5,6 +5,7 @@ const adminMiddleware = require('../middleware/adminMiddleware');
 const UserModel = require('../models/user_model');
 const AddressModel = require('../models/address_model')
 const OrderModel = require('../models/order_model')
+const ProductModel = require('../models/product_model')
 
 // admin route
 router.get('/', adminMiddleware, async (req, res) => {
@@ -53,6 +54,34 @@ router.patch('/:userId/toggleAdmin', adminMiddleware, async (req, res) => {
     } catch (error) {
         console.error('Error updating admin status:', error);
         res.status(500).json({ error: 'Error updating admin status' });
+    }
+});
+
+
+
+// Remove a product by ID
+router.delete('/:productId', adminMiddleware, async (req, res) => {
+    try {
+        await ProductModel.findByIdAndDelete(req.params.productId);
+        res.json({ message: 'Product removed successfully' });
+    } catch (error) {
+        console.error('Error removing product:', error);
+        res.status(500).json({ error: 'Error removing product' });
+    }
+});
+
+// Update a product by ID
+router.put('/:productId', adminMiddleware, async (req, res) => {
+    try {
+        const updatedProduct = await ProductModel.findByIdAndUpdate(
+            req.params.productId,
+            req.body,
+            { new: true }
+        );
+        res.json(updatedProduct);
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ error: 'Error updating product' });
     }
 });
 
