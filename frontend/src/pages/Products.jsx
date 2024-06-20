@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
+import { Spinner } from 'react-bootstrap';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
