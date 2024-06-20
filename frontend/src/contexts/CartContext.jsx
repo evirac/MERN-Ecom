@@ -82,7 +82,6 @@ export const CartProvider = ({ children }) => {
         })
             .then(async response => {
                 setCart(response.data.cart);
-                console.log('Remove from Cart:', response.data.cart);  // Debugging
                 await loadCart(token)
             })
             .catch(err => {

@@ -1,14 +1,14 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { CartContext } from '../contexts/CartContext';
 
-
 export default function Header() {
-    const { cart } = useContext(CartContext);
+    const { cart, clearCart } = useContext(CartContext);
     const [loggedIn, setLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -25,8 +25,14 @@ export default function Header() {
             });
         }
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        clearCart();
+        setLoggedIn(false);
+        navigate('/login');
+    };
     
-  
     return (
         <>
             <nav className="navbar navbar-expand-lg">
@@ -61,9 +67,14 @@ export default function Header() {
                         </div>
                         <ul className="navbar-nav me-auto mb-lg-0">
                             {loggedIn ? (
-                                <li className="nav-item ms-2 mb-2">
-                                    <Link className="nav-item btn contrast" to="/profile">Profile</Link>
-                                </li>
+                                <>
+                                    <li className="nav-item ms-2 mb-2">
+                                        <Link className="nav-item btn contrast" to="/profile">Profile</Link>
+                                    </li>
+                                    <li className="nav-item ms-2 mb-2">
+                                        <button className="nav-item btn contrast" onClick={handleLogout}>Logout</button>
+                                    </li>
+                                </>
                             ) : (
                                 <li className="nav-item ms-2 mb-2">
                                     <Link className="nav-item btn contrast" to="/login">Login</Link>

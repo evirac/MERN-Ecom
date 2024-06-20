@@ -25,9 +25,9 @@ const Payment = () => {
             <Header/>
             <div>
                 <h2>Payment Method</h2>
-                <input type="radio" className='check-input mb-4 ms-4' name="paymentMethod" value="PayPal " onChange={handlePaymentChange} /> PayPal
+                <input type="radio" className='radio form-check-input mb-4 ms-4' name="paymentMethod" value="PayPal " onChange={handlePaymentChange} /> PayPal
                 <br />
-                <input type="radio" className='check-input mb-4 ms-4' name="paymentMethod" value="Cash on Delivery" onChange={handlePaymentChange} /> Cash on Delivery
+                <input type="radio" className='radio form-check-input mb-4 ms-4' name="paymentMethod" value="Cash on Delivery" onChange={handlePaymentChange} /> Cash on Delivery
                 <br />
                 <button className='btn mb-5 ms-4' onClick={handleNext}>Order Summary</button>
             </div>

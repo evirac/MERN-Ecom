@@ -3,6 +3,7 @@ import { CartContext } from '../contexts/CartContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import { Stack, Container, Col, Row, Card, Spinner } from 'react-bootstrap';
 
 
 export default function Cart() {
@@ -28,31 +29,31 @@ export default function Cart() {
         return `data:image/jpeg;base64,${imageBase64}`;
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return (
+        <div className="text-center mt-5">
+            <Spinner />
+        </div>
+    );
     if (error) return <div>Error: {error}</div>;
 
     const { total, tax, grandTotal } = calculateTotal();
     return (
         <>
             <Header />
-            <div className="container my-3">
+            <Container className="my-3">
                 <h1 className="text-center">Shopping Cart</h1>
-                <div className="row">
+                <Row>
                     {cart.map(item => (
-                        <div key={item._id} className="col-12 mb-3">
-                            <div className="card">
-                                <div className="row g-0">
-                                    <div className="col-md-4">
-                                        <img
-                                            src={getImageSrc(item.productId.Image)}
-                                            className="img-thumbnail rounded-start"
-                                            alt={item.productId.Name}
-                                        />
-                                    </div>
-                                    <div className="col-md-8">
-                                        <div className="card-body d-flex flex-column">
-                                            <h5 className="card-title">{item.productId.Name}</h5>
-                                            <p className="card-text">${item.productId.Price}</p>
+                        <Col xs={12} key={item._id} className="mb-3">
+                            <Card className="d-flex" style={{maxWidth: "690px"}}>
+                                <Row  className="g-0">
+                                    <Col md={4}>
+                                        <Card.Img variant='top' src={getImageSrc(item.productId.Image)}></Card.Img>
+                                    </Col>
+                                    <Col md={8}>
+                                        <Card.Body className="d-flex flex-column">
+                                            <Card.Title>{item.productId.Name}</Card.Title>
+                                            <Card.Text>${item.productId.Price}</Card.Text>
                                             <div className="d-flex align-items-center mb-2">
                                                 <button
                                                     className="btn btn-outline-secondary"
@@ -69,19 +70,21 @@ export default function Cart() {
                                                     +
                                                 </button>
                                             </div>
-                                            <button
-                                                className="btn btn-danger"
-                                                onClick={() => removeFromCart(item.productId._id)}
-                                            >
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                            <Card.Link>
+                                                <button
+                                                    className="btn contrast"
+                                                    onClick={() => removeFromCart(item.productId._id)}
+                                                >
+                                                    Remove
+                                                </button>
+                                            </Card.Link>
+                                        </Card.Body>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
                     ))}
-                </div>
+                </Row>
                 <div className="row mt-3">
                     <div className="col-12">
                         <div className="card">
@@ -95,7 +98,7 @@ export default function Cart() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Container>
             <Footer />
         </>
     );
