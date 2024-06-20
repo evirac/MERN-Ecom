@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { CartContext } from '../contexts/CartContext';
-import { Row, Col, Container, Card, Spinner } from "react-bootstrap"
+import { Row, Col, Container, Card, Spinner, Stack } from "react-bootstrap"
 
 
 const Profile = () => {
@@ -42,24 +42,29 @@ const Profile = () => {
     return (
         <>
             <Header />
-            <Container className="container my-3">
+            <Container className="my-3">
                 <h1 className="text-center">Profile</h1>
-                <div className="row">
-                    <div className="col-md-6 offset-md-3">
-                        <div className="card">
-                            <div className="card-body">
-                                <h5 className="card-title">Profile Details</h5>
-                                <p className="card-text">Full Name: {user.fullName}</p>
-                                <p className="card-text">
+                <Row>
+                    <Col md={6} className="offset-md-3">
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Profile Details</Card.Title>
+                                <Card.Text>Full Name: {user.fullName}</Card.Text>
+                                <Card.Text className="card-text">
                                     Email: {user.email}
+                                </Card.Text>
+                                <Stack direction='horizontal' >
                                     <Link to="/updateEmail" className="btn btn-link ms-2">Update Email</Link>
-                                </p>
-                                <Link to="/resetPassword" className="btn btn-link">Reset Password</Link>
-                            </div>
-                        </div>
-                        <button className="btn contrast mt-3" onClick={handleLogout}>Logout</button>
-                    </div>
-                </div>
+                                    <Link to="/resetPassword" className="ms-auto btn btn-link">Reset Password</Link>
+
+                                    {user.isAdmin && (
+                                        <Link to="/admin" className="ms-auto btn">Admin Actions</Link>
+                                    )}
+                                </Stack>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
                 <h2 className="text-center my-4">Order History</h2>
                 {loading ? (
                     <div className="text-center my-5">
