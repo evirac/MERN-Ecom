@@ -4,7 +4,7 @@ import axios from "axios";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faStar } from '@fortawesome/free-solid-svg-icons';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
 import '../css/ProductDetail.css';
@@ -12,15 +12,19 @@ import '../css/ProductDetail.css';
 export default function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
+    const [reviews, setReviews] = useState([]);
     const [showToast, setShowToast] = useState(false);
     const { addToCart } = useContext(CartContext);
     const navigate = useNavigate();
+    const [newReview, setNewReview] = useState({ rating: 0, review: '' });
 
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
                 const response = await axios.get(`http://localhost:5500/products/${id}`);
                 setProduct(response.data);
+                const reviewsResponse = await axios.get(`http://localhost:5500/products/${id}/reviews`);
+                setReviews(reviewsResponse.data);
             } catch (error) {
                 console.error('Error fetching product details:', error);
             }
@@ -28,10 +32,6 @@ export default function ProductDetails() {
 
         fetchProductDetails();
     }, [id]);
-
-    if (!product) {
-        return <div>Loading...</div>;
-    }
 
     const handleAddToCart = () => {
         const token = localStorage.getItem('token');
@@ -42,6 +42,30 @@ export default function ProductDetails() {
         addToCart(product);
         setShowToast(true);
     };
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        try {
+            await axios.post(`http://localhost:5500/products/${id}/reviews`, newReview, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const reviewsResponse = await axios.get(`http://localhost:5500/products/${id}/reviews`);
+            setReviews(reviewsResponse.data);
+            setNewReview({ rating: 0, review: '' });
+        } catch (error) {
+            console.error('Error adding review:', error);
+        }
+    };
+
+    if (!product) {
+        return <div>Loading...</div>;
+    }
 
     const getCategoryBadgeClass = (category) => {
         switch (category) {
@@ -96,6 +120,62 @@ export default function ProductDetails() {
                     </div>
                 </div>
             </div>
+
+            {/* Reviews Section */}
+            <div className="reviews-section card m-3 mb-3 p-3">
+                <h2>Ratings and Reviews</h2>
+                <div className="average-rating">
+                    <h3>Average Rating: {product.averageRating.toFixed(1)} <FontAwesomeIcon icon={faStar} className="text-warning" /></h3>
+                </div>
+                <ul className="list-group">
+                    {reviews.map((review, idx) => (
+                        <li key={idx} className="list-group-item">
+                            <div className="d-flex align-items-center">
+                                <div className="user-name me-2">{review.user.fullName}</div>
+                                <div className="rating">
+                                    {[...Array(5)].map((star, i) => (
+                                        <FontAwesomeIcon
+                                            key={i}
+                                            icon={faStar}
+                                            className={i < review.rating ? 'text-warning' : 'text-secondary'}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="review-text">{review.review}</div>
+                        </li>
+                    ))}
+                </ul>
+
+                <form className="mt-3" onSubmit={handleReviewSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="rating" className="form-label">Rating</label>
+                        <select
+                            id="rating"
+                            className="form-select"
+                            value={newReview.rating}
+                            onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
+                            required
+                        >
+                            <option value="">Select rating</option>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <option key={star} value={star}>{star}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="review" className="form-label">Review</label>
+                        <textarea
+                            id="review"
+                            className="form-control"
+                            value={newReview.review}
+                            onChange={(e) => setNewReview({ ...newReview, review: e.target.value })}
+                        ></textarea>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+
             {showToast && <Toast message="Item added to cart" onClose={() => setShowToast(false)} />}
             <Footer />
         </>
