@@ -20,6 +20,9 @@ import Payment from './pages/Payment'
 import OrderSummary from './pages/OrderSummary'
 import { OrderProvider } from './contexts/OrderContext'
 import OrderDetails from './pages/OrderDetails'
+import Admin from './pages/Admin'
+import AdminUserActions from './pages/AdminUserAction'
+
 
 const router = createBrowserRouter([
   {
@@ -86,15 +89,23 @@ const router = createBrowserRouter([
   {
     path: "/order/:orderId",
     element: <OrderDetails />
+  },
+  {
+    path: "/admin",
+    element: <Admin />
+  },
+  {
+    path: "/admin/user/:userId",
+    element: <AdminUserActions />
   }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-      <CartProvider>
-    <OrderProvider>
+    <CartProvider>
+      <OrderProvider>
         <RouterProvider router={router} />
-    </OrderProvider>
-      </CartProvider>
+      </OrderProvider>
+    </CartProvider>
   </React.StrictMode>
 );

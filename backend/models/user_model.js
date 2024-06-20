@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    cart: [CartItemSchema]
+    cart: [CartItemSchema],
+    isAdmin: { type: Boolean, default: false }
 });
 
 // Hash the password before saving
