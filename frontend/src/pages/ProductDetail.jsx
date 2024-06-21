@@ -7,11 +7,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
-import '../css/ProductDetail.css';
+import ProductReview from "../components/ProductReview";
+import { Spinner } from "react-bootstrap";
 
 export default function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
+    const [reviews, setReviews] = useState([]);
     const [showToast, setShowToast] = useState(false);
     const { addToCart } = useContext(CartContext);
     const navigate = useNavigate();
@@ -21,6 +23,8 @@ export default function ProductDetails() {
             try {
                 const response = await axios.get(`http://localhost:5500/products/${id}`);
                 setProduct(response.data);
+                const reviewsResponse = await axios.get(`http://localhost:5500/products/${id}/reviews`);
+                setReviews(reviewsResponse.data);
             } catch (error) {
                 console.error('Error fetching product details:', error);
             }
@@ -28,10 +32,6 @@ export default function ProductDetails() {
 
         fetchProductDetails();
     }, [id]);
-
-    if (!product) {
-        return <div>Loading...</div>;
-    }
 
     const handleAddToCart = () => {
         const token = localStorage.getItem('token');
@@ -42,6 +42,10 @@ export default function ProductDetails() {
         addToCart(product);
         setShowToast(true);
     };
+
+    if (!product) {
+        return (<div className="text-center my-5"><Spinner /></div>)
+    }
 
     const getCategoryBadgeClass = (category) => {
         switch (category) {
@@ -96,6 +100,10 @@ export default function ProductDetails() {
                     </div>
                 </div>
             </div>
+
+            {/* Reviews Section */}
+            <ProductReview product={product} reviews={reviews} setReviews={setReviews} />
+
             {showToast && <Toast message="Item added to cart" onClose={() => setShowToast(false)} />}
             <Footer />
         </>
