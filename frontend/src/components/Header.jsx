@@ -116,7 +116,7 @@ export default function Header() {
                             <NavLink className="nav-link" to='/'>Home</NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/products">Browse Products</NavLink>
+                            <NavLink className="nav-link" to="/products">Products</NavLink>
                         </li>
                         <li className="nav-item dropdown">
                             <Link className="nav-link dropdown-toggle" to="/products?category=Men" role="button" data-bs-toggle="dropdown" aria-expanded="false">Men</Link>
