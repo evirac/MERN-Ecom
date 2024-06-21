@@ -7,9 +7,9 @@ import "slick-carousel/slick/slick-theme.css";
 import "../css/SliderComponent.css";
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
-import { Container, Card, Ratio, Col, Row, Spinner, Stack } from "react-bootstrap";
+import { Container, Card, Ratio, Spinner, Stack } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faArrowRight, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
 
 function SliderComponent() {
@@ -36,6 +36,23 @@ function SliderComponent() {
         }
         addToCart(product);
         setShowToast(true);
+    };
+
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.4 && rating % 1 <= 0.6;
+
+        return (
+            <>
+                {[...Array(5)].map((star, i) => (
+                    <FontAwesomeIcon
+                        key={i}
+                        icon={i < fullStars ? faStar : (i === fullStars && halfStar ? faStarHalfAlt : faStar)}
+                        className={i < rating ? 'text-warning' : 'text-secondary'}
+                    />
+                ))}
+            </>
+        );
     };
 
     const settings = {
@@ -106,15 +123,18 @@ function SliderComponent() {
                                     <div className="d-flex justify-content-evenly mt-3">
                                         <Link
                                             to={`/product/${product._id}`}
-                                            className="btn btn-lg">
-                                            <FontAwesomeIcon icon={faArrowRight} />
+                                            className="btn ">
+                                                Product Details <FontAwesomeIcon icon={faArrowRight} />
                                         </Link>
                                         <button
-                                            className="btn btn-lg contrast ms-2"
+                                            className="btn contrast ms-2"
                                             onClick={() => handleAddToCart(product)}>
                                             <FontAwesomeIcon icon={faCartShopping} />
                                         </button>
                                     </div>
+                                    <Card.Footer className="mt-3">
+                                        {renderStars(product.averageRating)} ({product.reviews.length})
+                                    </Card.Footer>
                                 </Card.Body>
                             </Card>
                         ))}
