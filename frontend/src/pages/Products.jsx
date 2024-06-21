@@ -5,7 +5,9 @@ import Footer from '../components/Footer';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
-import { Spinner } from 'react-bootstrap';
+import { Card, Ratio, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -78,6 +80,23 @@ const Products = () => {
         window.history.replaceState(null, '', `?${newParams.toString()}`);
     };
 
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.4 && rating % 1 <= 0.6;
+
+        return (
+            <>
+                {[...Array(5)].map((star, i) => (
+                    <FontAwesomeIcon
+                        key={i}
+                        icon={i < fullStars ? faStar : (i === fullStars && halfStar ? faStarHalfAlt : faStar)}
+                        className={i < rating ? 'text-warning' : 'text-secondary'}
+                    />
+                ))}
+            </>
+        );
+    };
+
     const filteredProducts = selectedSubCategory
         ? products.filter(product => product.SubCategory === selectedSubCategory && product.Category === selectedCategory)
         : selectedCategory
@@ -116,22 +135,33 @@ const Products = () => {
                     ) : (
                         filteredProducts.map(product => (
                             <div key={product._id} className="col-lg-3 col-md-6 mb-3">
-                                <div className="card">
+                                <Card>
                                     <Link to={`/product/${product._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                        <img
-                                            src={`data:image/jpeg;base64,${product.Image}`}
-                                            className="card-img-top"
-                                            alt={product.Name}
-                                        />
-                                        <div className="card-body">
-                                            <h5 className="card-title">{product.Name}</h5>
-                                            <p className="card-text">${product.Price}</p>
-                                            <p className="card-text">Category: {product.Category}</p>
-                                            <p className="card-text">Sub-Category: {product.SubCategory}</p>
-                                        </div>
+                                        <Ratio aspectRatio={'1x1'}>
+                                            <img
+                                                src={`data:image/jpeg;base64,${product.Image}`}
+                                                className="card-img-top"
+                                                alt={product.Name}
+                                            />
+                                        </Ratio>
+
+
+                                        <Card.Body>
+                                            <Card.Title>{product.Name}</Card.Title>
+                                            <Card.Text>${product.Price}</Card.Text>
+                                            <Card.Text>Category: {product.Category}</Card.Text>
+                                            <Card.Text>Sub-Category: {product.SubCategory}</Card.Text>
+                                            <Card.Footer className="mt-3">
+                                                {renderStars(product.averageRating)} ({product.reviews.length})
+                                            </Card.Footer>
+                                        </Card.Body>
                                     </Link>
-                                    <button className="btn btn-secondary m-2" onClick={() => handleAddToCart(product)}>Add to Cart</button>
-                                </div>
+                                    <button
+                                        className="btn contrast m-2"
+                                        onClick={() => handleAddToCart(product)}>
+                                        Add to Cart <FontAwesomeIcon icon={faCartShopping} />
+                                    </button>
+                                </Card>
                             </div>
                         ))
                     )}
