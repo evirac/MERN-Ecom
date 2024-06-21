@@ -5,7 +5,9 @@ import Footer from '../components/Footer';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
-import { Spinner } from 'react-bootstrap';
+import { Ratio, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -118,11 +120,15 @@ const Products = () => {
                             <div key={product._id} className="col-lg-3 col-md-6 mb-3">
                                 <div className="card">
                                     <Link to={`/product/${product._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                        <img
+                                    <Ratio aspectRatio={'1x1'}>
+                                         <img
                                             src={`data:image/jpeg;base64,${product.Image}`}
                                             className="card-img-top"
                                             alt={product.Name}
                                         />
+                                    </Ratio>
+                                       
+
                                         <div className="card-body">
                                             <h5 className="card-title">{product.Name}</h5>
                                             <p className="card-text">${product.Price}</p>
@@ -130,7 +136,11 @@ const Products = () => {
                                             <p className="card-text">Sub-Category: {product.SubCategory}</p>
                                         </div>
                                     </Link>
-                                    <button className="btn btn-secondary m-2" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                                    <button 
+                                    className="btn contrast m-2" 
+                                        onClick={() => handleAddToCart(product)}>
+                                        Add to Cart <FontAwesomeIcon icon={faCartShopping} />
+                                        </button>
                                 </div>
                             </div>
                         ))

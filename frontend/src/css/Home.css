@@ -67,3 +67,9 @@ a{
 input[type="radio"]{
   outline: 2px solid #789099;
 }
+
+img.card-img-top{
+  object-fit: cover;
+  border: 1px solid #3d3d45;
+  padding: 2px;
+}
