@@ -4,35 +4,43 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { CartContext } from '../contexts/CartContext';
-import { Row, Col, Container, Card, Spinner, Stack, ListGroup } from "react-bootstrap"
-
+import { Row, Col, Container, Card, Spinner, Stack, ListGroup } from "react-bootstrap";
+import Toast from "../components/Toast"; // Import the Toast component
 
 const Profile = () => {
     const [user, setUser] = useState({});
     const [orders, setOrders] = useState([]);
-    useContext(CartContext);
+    const { showToast, setShowToast } = useContext(CartContext); // Use context for toast
     const [loading, setLoading] = useState(true);
-
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        if (!token) {
+            setShowToast(true);
+            return;
+        }
+
         axios.get('http://localhost:5500/users/profile', {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => setUser(response.data))
-            .catch(err => console.error('Error fetching profile:', err));
+            .catch(err => {
+                setShowToast(true);
+                console.error('Error fetching profile:', err);
+            });
 
         axios.get('http://localhost:5500/orders/', {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {
-                console.log("ORDERS: ", response.data)
-                setOrders(response.data)
-                setLoading(false); // Data fetched, set loading to false
+                setOrders(response.data);
+                setLoading(false);
             })
-            .catch(err => console.error('Error fetching order history:', err));
+            .catch(err => {
+                setShowToast(true);
+                console.error('Error fetching order history:', err);
+            });
     }, []);
-
 
     return (
         <>
@@ -72,7 +80,7 @@ const Profile = () => {
                 ) : (
                     <Row>
                         {orders.map((order, index) => (
-                            <Col key={index} md={4} >
+                            <Col key={index} md={4}>
                                 <Card className="my-2 shadow shadow-primary">
                                     <Card.Body>
                                         <Card.Title>
@@ -83,8 +91,7 @@ const Profile = () => {
                                             <div className='card-text' key={product._id}>
                                                 <ListGroup>
                                                     <ListGroup.Item variant='primary' className='mb-1'>
-                                                        {product.productId.Name}
-                                                         X {product.quantity}
+                                                        {product.productId.Name} X {product.quantity}
                                                     </ListGroup.Item>
                                                 </ListGroup>
                                             </div>
@@ -97,6 +104,7 @@ const Profile = () => {
                 )}
             </Container>
             <Footer />
+            {showToast && <Toast message="Looged in Successfully" onClose={() => setShowToast(false)} />}
         </>
     );
 };

@@ -7,6 +7,7 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showToast, setShowToast] = useState(false); // State for showing toast
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -35,7 +36,7 @@ export const CartProvider = ({ children }) => {
     const addToCart = (product) => {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.error('No token found. Please log in.');
+            setShowToast(true);
             return;
         }
 
@@ -44,7 +45,7 @@ export const CartProvider = ({ children }) => {
         })
             .then(async response => {
                 setCart(response.data.cart);
-                await loadCart(token)
+                await loadCart(token);
             })
             .catch(err => {
                 console.error('Error adding to cart:', err);
@@ -54,7 +55,7 @@ export const CartProvider = ({ children }) => {
     const updateQuantity = (productId, quantity) => {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.error('No token found. Please log in.');
+            setShowToast(true);
             return;
         }
 
@@ -63,7 +64,7 @@ export const CartProvider = ({ children }) => {
         })
             .then(async response => {
                 setCart(response.data.cart);
-                await loadCart(token)
+                await loadCart(token);
             })
             .catch(err => {
                 console.error('Error updating cart quantity:', err);
@@ -73,7 +74,7 @@ export const CartProvider = ({ children }) => {
     const removeFromCart = (productId) => {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.error('No token found. Please log in.');
+            setShowToast(true);
             return;
         }
 
@@ -82,18 +83,17 @@ export const CartProvider = ({ children }) => {
         })
             .then(async response => {
                 setCart(response.data.cart);
-                await loadCart(token)
+                await loadCart(token);
             })
             .catch(err => {
                 console.error('Error removing from cart:', err);
             });
     };
 
-
     const clearCart = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.error('No token found. Please log in.');
+            setShowToast(true);
             return;
         }
 
@@ -108,7 +108,7 @@ export const CartProvider = ({ children }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart, loadCart, loading, error }}>
+        <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart, loadCart, loading, error, showToast, setShowToast }}>
             {children}
         </CartContext.Provider>
     );
