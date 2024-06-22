@@ -9,7 +9,7 @@ export default function Home() {
             <Header />
             <div className="cover">
                 <h1 className="text-center">
-                    <img src={'../../logo.svg'} alt="logo" />
+                    <img src="assets/logo.svg" alt="logo" />
                         NovaNest
                 </h1>
                 <figcaption className="blockquote-footer text-center">
