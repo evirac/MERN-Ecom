@@ -5,6 +5,10 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { CartContext } from '../contexts/CartContext';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 export default function Header() {
     const { cart, clearCart } = useContext(CartContext);
     const [loggedIn, setLoggedIn] = useState(false);
@@ -15,7 +19,7 @@ export default function Header() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post('http://localhost:5500/users/verifyToken', {}, {
+            axios.post(`${API_URL}/users/verifyToken`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

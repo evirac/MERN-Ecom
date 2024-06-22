@@ -3,6 +3,12 @@ import axios from 'axios';
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
+
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
+
 const Register = () => {
     const [form, setForm] = useState({
         fullName: '',
@@ -28,7 +34,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5500/users/register', {
+            const response = await axios.post(`${API_URL}/users/register`, {
                 fullName: form.fullName,
                 email: form.email,
                 password: form.password

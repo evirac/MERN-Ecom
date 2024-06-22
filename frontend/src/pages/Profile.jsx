@@ -7,6 +7,11 @@ import { CartContext } from '../contexts/CartContext';
 import { Row, Col, Container, Card, Spinner, Stack, ListGroup } from "react-bootstrap";
 import Toast from "../components/Toast"; // Import the Toast component
 
+
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const Profile = () => {
     const [user, setUser] = useState({});
     const [orders, setOrders] = useState([]);
@@ -20,7 +25,7 @@ const Profile = () => {
             return;
         }
 
-        axios.get('http://localhost:5500/users/profile', {
+        axios.get(`${API_URL}/users/profile`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => setUser(response.data))
@@ -29,7 +34,7 @@ const Profile = () => {
                 console.error('Error fetching profile:', err);
             });
 
-        axios.get('http://localhost:5500/orders/', {
+        axios.get(`${API_URL}/orders/`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {

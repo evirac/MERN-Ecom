@@ -3,6 +3,10 @@ import Footer from '../components/Footer'
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const AddProduct = () => {
     const categories = {
         Men: ['Pant', 'Shirt', 'Hoodie'],
@@ -70,7 +74,7 @@ const AddProduct = () => {
         formData.append('Image', form.image);
 
         try {
-            const response = await axios.post('http://localhost:5500/products', formData, {
+            const response = await axios.post(`${API_URL}/products`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             console.log('Product added:', response.data);

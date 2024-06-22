@@ -2,6 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { CartContext } from './CartContext';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 export const OrderContext = createContext();
 
 export const OrderProvider = ({ children }) => {
@@ -53,7 +57,7 @@ export const OrderProvider = ({ children }) => {
                 totalPrice: order.totalPrice,
             };
 
-            const response = await axios.post('http://localhost:5500/orders', orderData, {
+            const response = await axios.post(`${API_URL}/orders`, orderData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             clearCart(); // Clear the cart after placing the order

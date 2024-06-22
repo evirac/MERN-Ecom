@@ -3,13 +3,17 @@ import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const UpdateEmail = () => {
     const [newEmail, setNewEmail] = useState('');
     const [message, setMessage] = useState('');
 
     const handleUpdateEmail = () => {
         const token = localStorage.getItem('token');
-        axios.put('http://localhost:5500/users/updateEmail', { newEmail }, {
+        axios.put(`${API_URL}/users/updateEmail`, { newEmail }, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => setMessage(response.data.message))

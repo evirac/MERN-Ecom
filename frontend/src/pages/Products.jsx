@@ -9,6 +9,10 @@ import { Card, Ratio, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const Products = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,7 +47,7 @@ const Products = () => {
         setSelectedCategory(category);
         setSelectedSubCategory(subCategory);
 
-        axios.get('http://localhost:5500/products')
+        axios.get(`${API_URL}/products`)
             .then(response => {
                 setProducts(response.data);
                 setLoading(false); // Data fetched, set loading to false

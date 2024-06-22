@@ -5,6 +5,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Container, Card, Col, Row, Button, ListGroup } from 'react-bootstrap';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const AdminUserActions = () => {
     const { userId } = useParams();
     const [userDetails, setUserDetails] = useState({
@@ -17,7 +21,7 @@ const AdminUserActions = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(`http://localhost:5500/admin/${userId}`, {
+        axios.get(`${API_URL}/admin/${userId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {
@@ -32,7 +36,7 @@ const AdminUserActions = () => {
 
     const toggleAdminAccess = () => {
         const token = localStorage.getItem('token');
-        axios.patch(`http://localhost:5500/admin/${userId}/toggleAdmin`, {}, {
+        axios.patch(`${API_URL}/admin/${userId}/toggleAdmin`, {}, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {

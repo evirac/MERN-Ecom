@@ -11,6 +11,9 @@ import { Container, Card, Ratio, Spinner, Stack } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faArrowRight, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
 
 function SliderComponent() {
     const [products, setProducts] = useState([]);
@@ -21,7 +24,7 @@ function SliderComponent() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios('http://localhost:5500/products');
+            const result = await axios(`${API_URL}/products`);
             setProducts(result.data);
             setLoading(false);
         };

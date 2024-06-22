@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const ShippingScreen = () => {
     const { addShippingAddress } = useContext(OrderContext);
     const [addresses, setAddresses] = useState([]);
@@ -19,7 +23,7 @@ const ShippingScreen = () => {
     const navigate = useNavigate();
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get('http://localhost:5500/addresses/get', {
+        axios.get(`${API_URL}/addresses/get`, {
             timeout: 5000,
             headers: { Authorization: `Bearer ${token}` }
         })
@@ -33,7 +37,7 @@ const ShippingScreen = () => {
 
     const handleAddAddress = async () => {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:5500/addresses/post', newAddress, {
+        const response = await axios.post('${API_URL}/addresses/post', newAddress, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setAddresses([...addresses, response.data.address]);

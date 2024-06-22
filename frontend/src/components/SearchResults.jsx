@@ -6,6 +6,10 @@ import Footer from '../components/Footer';
 import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const SearchResults = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ const SearchResults = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:5500/products')
+        axios.get(`${API_URL}/products`)
             .then(response => {
                 setProducts(response.data);
                 setLoading(false);

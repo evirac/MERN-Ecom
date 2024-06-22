@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const RemoveProduct = () => {
     const [productId, setProductId] = useState('');
     const [loading, setLoading] = useState(false);
@@ -14,7 +18,7 @@ const RemoveProduct = () => {
     const handleRemoveProduct = () => {
         setLoading(true);
         const token = localStorage.getItem('token');
-        axios.delete(`http://localhost:5500/admin/${productId}`, {
+        axios.delete(`${API_URL}/admin/${productId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {

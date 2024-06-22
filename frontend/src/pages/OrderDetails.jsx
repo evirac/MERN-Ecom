@@ -4,6 +4,12 @@ import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Container, Card, Row, Col, Spinner, ListGroup } from 'react-bootstrap';
+
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
+
 const OrderDetails = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState(null);
@@ -11,7 +17,7 @@ const OrderDetails = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(`http://localhost:5500/orders/${orderId}`, {
+        axios.get(`${API_URL}/orders/${orderId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {

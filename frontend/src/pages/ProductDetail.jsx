@@ -10,6 +10,10 @@ import Toast from "../components/Toast";
 import ProductReview from "../components/ProductReview";
 import { Spinner } from "react-bootstrap";
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 export default function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
@@ -21,9 +25,9 @@ export default function ProductDetails() {
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:5500/products/${id}`);
+                const response = await axios.get(`${API_URL}/products/${id}`);
                 setProduct(response.data);
-                const reviewsResponse = await axios.get(`http://localhost:5500/products/${id}/reviews`);
+                const reviewsResponse = await axios.get(`${API_URL}/products/${id}/reviews`);
                 setReviews(reviewsResponse.data);
             } catch (error) {
                 console.error('Error fetching product details:', error);

@@ -3,7 +3,7 @@ import { OrderContext } from '../contexts/OrderContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
-import { Card, ListGroup, Container , Row, Col} from 'react-bootstrap';
+import { ListGroup, Container , Row, Col} from 'react-bootstrap';
 
 const OrderSummary = () => {
     const { order, placeOrder } = useContext(OrderContext);

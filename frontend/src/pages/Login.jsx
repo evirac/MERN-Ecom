@@ -5,6 +5,10 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { CartContext } from "../contexts/CartContext";
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
     const navigate = useNavigate();
@@ -22,7 +26,7 @@ export default function Login() {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:5500/users/login', form);
+            const response = await axios.post(`${API_URL}/users/login`, form);
             const token = response.data.token;
             localStorage.setItem('token', token);
 

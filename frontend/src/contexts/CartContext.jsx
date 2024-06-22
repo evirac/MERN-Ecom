@@ -1,6 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
@@ -21,7 +25,7 @@ export const CartProvider = ({ children }) => {
     const loadCart = async (token) => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:5500/users/cart', {
+            const response = await axios.get(`${API_URL}/users/cart`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setCart(response.data.cart);
@@ -40,7 +44,7 @@ export const CartProvider = ({ children }) => {
             return;
         }
 
-        axios.post('http://localhost:5500/users/cart/add', { productId: product._id }, {
+        axios.post(`${API_URL}/users/cart/add`, { productId: product._id }, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(async response => {
@@ -59,7 +63,7 @@ export const CartProvider = ({ children }) => {
             return;
         }
 
-        axios.post('http://localhost:5500/users/cart/update', { productId, quantity }, {
+        axios.post(`${API_URL}/users/cart/update`, { productId, quantity }, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(async response => {
@@ -78,7 +82,7 @@ export const CartProvider = ({ children }) => {
             return;
         }
 
-        axios.post('http://localhost:5500/users/cart/remove', { productId }, {
+        axios.post(`${API_URL}/users/cart/remove`, { productId }, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(async response => {
@@ -98,7 +102,7 @@ export const CartProvider = ({ children }) => {
         }
 
         try {
-            await axios.post('http://localhost:5500/users/cart', { cart: [] }, {
+            await axios.post(`${API_URL}/users/cart`, { cart: [] }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setCart([]);

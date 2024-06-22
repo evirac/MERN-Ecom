@@ -5,12 +5,16 @@ import Footer from '../components/Footer';
 import { Container, Card, Col, Row, ListGroup, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const Admin = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get('http://localhost:5500/admin', {
+        axios.get(`${API_URL}/admin`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => setUsers(response.data))

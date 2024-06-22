@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const UpdateProduct = () => {
     const [productId, setProductId] = useState('');
     const [productDetails, setProductDetails] = useState({
@@ -26,7 +30,7 @@ const UpdateProduct = () => {
     const handleUpdateProduct = () => {
         setLoading(true);
         const token = localStorage.getItem('token');
-        axios.put(`http://localhost:5500/admin/${productId}`, productDetails, {
+        axios.put(`${API_URL}/admin/${productId}`, productDetails, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {

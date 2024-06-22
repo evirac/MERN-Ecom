@@ -3,6 +3,11 @@ import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
+
 const ResetPassword = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -11,7 +16,7 @@ const ResetPassword = () => {
 
     const handleResetPassword = () => {
         const token = localStorage.getItem('token');
-        axios.put('http://localhost:5500/users/resetPassword', { currentPassword, newPassword }, {
+        axios.put(`${API_URL}/users/resetPassword`, { currentPassword, newPassword }, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {

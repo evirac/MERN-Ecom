@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://mern-ecom-tguf.onrender.com' 
+  : 'http://localhost:5500';
+
 const ProductReview = ({ product, reviews, setReviews }) => {
     const [newReview, setNewReview] = useState({ rating: 0, review: '' });
 
@@ -15,10 +19,10 @@ const ProductReview = ({ product, reviews, setReviews }) => {
         }
 
         try {
-            await axios.post(`http://localhost:5500/products/${product._id}/reviews`, newReview, {
+            await axios.post(`${API_URL}/products/${product._id}/reviews`, newReview, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            const reviewsResponse = await axios.get(`http://localhost:5500/products/${product._id}/reviews`);
+            const reviewsResponse = await axios.get(`${API_URL}/products/${product._id}/reviews`);
             setReviews(reviewsResponse.data);
             setNewReview({ rating: 0, review: '' });
         } catch (error) {
