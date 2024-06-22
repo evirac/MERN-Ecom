@@ -52,7 +52,7 @@ export default function Header() {
             <nav className="navbar navbar-expand-lg">
                 <div className="container-fluid">
                     <Link className="display-3 navbar-brand" to="/">
-                        <img alt="logo" width="40px;" height="34px" src={'../../logo.svg'} />
+                        <img alt="logo" width="40px;" height="34px" src="assets/logo.svg" />
                         NovaNest
                     </Link>
                     <button
