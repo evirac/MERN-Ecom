@@ -62,7 +62,7 @@ const Profile = () => {
                                     <Link to="/resetPassword" className=" btn btn-link">Reset Password</Link>
 
                                     {user.isAdmin && (
-                                        <Link to="/admin" className="btn">Admin Actions</Link>
+                                        <Link to="/admin" className="btn ms-auto">Admin Dashboard</Link>
                                     )}
                                 </Stack>
                             </Card.Body>
@@ -104,7 +104,7 @@ const Profile = () => {
                 )}
             </Container>
             <Footer />
-            {showToast && <Toast message="Looged in Successfully" onClose={() => setShowToast(false)} />}
+            {showToast && <Toast message="Logged in Successfully" onClose={() => setShowToast(false)} />}
         </>
     );
 };
