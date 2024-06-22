@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { MONGODB_URI } = require('./config');
+const { MONGODB_URI, PORT } = require('./config');
 const productRoutes = require('./routes/product_routes');
 const userRoutes = require('./routes/user_routes')
 const adminRoutes = require('./routes/admin_routes')
@@ -27,6 +27,6 @@ app.use('/admin',adminRoutes)
 app.use('/orders', orderRoutes)
 app.use('/addresses', addressRoutes)
 
-app.listen(5500, () => {
+app.listen(PORT, () => {
     console.log("server is running on port 5500");
 });

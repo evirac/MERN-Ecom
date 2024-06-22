@@ -1,5 +1,7 @@
-module.exports = {
-    MONGODB_URI: "mongodb+srv://ayush:1amAYUSH@novanest.48bn8yo.mongodb.net/data?retryWrites=true&w=majority&appName=NovaNest",
-    SECRET_KEY : 'secretKey'
+require('dotenv').config();
 
+module.exports = {
+    MONGODB_URI: process.env.MONGODB_URI,
+    SECRET_KEY: process.env.SECRET_KEY,
+    PORT: process.env.PORT || 5500
 }
