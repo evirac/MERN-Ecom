@@ -37,7 +37,7 @@ const ShippingScreen = () => {
 
     const handleAddAddress = async () => {
         const token = localStorage.getItem('token');
-        const response = await axios.post('${API_URL}/addresses/post', newAddress, {
+        const response = await axios.post(`${API_URL}/addresses/post`, newAddress, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setAddresses([...addresses, response.data.address]);
