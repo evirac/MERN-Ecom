@@ -12,7 +12,7 @@ const app = express();
 
 const allowedOrigins = [
     'http://localhost:5173', // Development origin
-    'https://beamish-mooncake-b13ad1.netlify.app', // Production origin,
+    'https://evirac-novanest.netlify.app', // Production origin,
     'https://main--beamish-mooncake-b13ad1.netlify.app/'
 ];
 
