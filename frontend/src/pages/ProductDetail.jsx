@@ -9,6 +9,7 @@ import { CartContext } from '../contexts/CartContext';
 import Toast from "../components/Toast";
 import ProductReview from "../components/ProductReview";
 import { Spinner } from "react-bootstrap";
+import '../css/ProductDetail.css';
 
 const API_URL = process.env.NODE_ENV === 'production'
   ? 'https://mern-ecom-tguf.onrender.com' 
